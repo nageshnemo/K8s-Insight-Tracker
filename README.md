@@ -33,47 +33,77 @@ chmod 700 get_helm.sh
 ./get_helm.sh
 ```
 
-### 3. Clone the Sample Application Repository
 
-Clone the Bank of Anthos application repository:
 
-```bash
-git clone https://github.com/GoogleCloudPlatform/bank-of-anthos.git
-cd bank-of-anthos/
-```
+### 3. Deploy OpenSource Prometheus, AlertManager, and Grafana
 
-### 4. Deploy OpenSource Prometheus, AlertManager, and Grafana
 
-#### Deploy Prometheus and AlertManager
+#install helm first
+curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3
+chmod 700 get_helm.sh
+./get_helm.sh
 
-Add the Bitnami Helm repository and install Prometheus with AlertManager:
 
-```bash
-helm repo add bitnami https://charts.bitnami.com/bitnami
-helm install tutorial bitnami/kube-prometheus \
-    --version 8.2.2 \
-    --values extras/prometheus/oss/values.yaml \
-    --wait
-```
 
-#### Deploy Grafana
+# Add Prometheus Helm repository and update
+helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
+helm repo update
 
-Add the Grafana Helm repository and install Grafana:
+# Create namespace for Prometheus and install Prometheus
+kubectl create ns monitoring
+helm install prometheus prometheus-community/prometheus -n monitoring
 
-```bash
+# Add Grafana Helm repository and update
 helm repo add grafana https://grafana.github.io/helm-charts
 helm repo update
-helm install my-release grafana/grafana
-```
 
-### 5. Deploy the Sample Application (Bank of Anthos)
+# Create namespace for Grafana and install Grafana
+kubectl create ns grafana
+helm install grafana grafana/grafana -n grafana
 
-Apply the JWT secret and deploy the Kubernetes manifests:
+# Optional: Get the Grafana admin password
+echo "Grafana admin password:"
+kubectl get secret --namespace grafana grafana -o jsonpath="{.data.admin-password}" | base64 --decode ; echo
 
-```bash
-kubectl apply -f extras/jwt/jwt-secret.yaml
-kubectl apply -f kubernetes-manifests
-```
+### 4. Deploy the Sample Application nginx and service 
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-app
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: nginx-app
+  template:
+    metadata:
+      labels:
+        app: nginx-app
+    spec:
+      containers:
+        - name: nginx-app
+          image: nginx:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 80
+
+
+### 5. Configure service to access application:
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx-app
+spec:
+  type: NodePort
+  selector:
+    app: nginx-app
+  ports:
+    - port: 80
+      protocol: TCP
+      targetPort: 80
+      nodePort: 31001
+
 
 ### 6. Configure Slack for Alerts
 
@@ -98,5 +128,6 @@ kubectl apply -f extras/prometheus/oss/rules.yaml
 ### 8. Set Up Grafana Dashboard
 
 Follow the Grafana UI instructions to create and configure your dashboard.
+
 
 
