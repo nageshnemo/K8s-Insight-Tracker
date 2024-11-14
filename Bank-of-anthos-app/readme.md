@@ -1,7 +1,4 @@
-# Solution to set Continuous monitoring, logging, and alerting on Kubernetes cluster using opensource tools 🚀
 
-## If you are a video person, feel free to check out the below video for end to end solution:👇
-[![Monitoring and Alerting](https://img.youtube.com/vi/gBdyIv9d_O8/sddefault.jpg)](https://youtu.be/gBdyIv9d_O8)
 
 ## Below are all the commands used in the video 👇
 
@@ -13,8 +10,7 @@
 *  Deploy a sample application to the cluster
 *  Setup alerts using AlertManager and Slack
 *  Setup Grafana dashboard
-*  EFK stack setup (Work-in-progress)
-*  Logging Setup (Work-in-progress)
+
 
 ## Create a GKE cluster using cloud
 **Note: Please do not create the autopilot cluster as it will have some restrictions, you can use the standard GKE cluster**
