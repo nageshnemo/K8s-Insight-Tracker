@@ -1,4 +1,4 @@
-Here’s the `README.md` in a single code block format to avoid multiple sections breaking the code flow:
+
 
 ```markdown
 # Kubernetes Monitoring Setup with Prometheus, AlertManager, and Grafana
@@ -124,6 +124,3 @@ kubectl apply -f extras/prometheus/oss/rules.yaml
 Follow the Grafana UI instructions to create and configure your dashboards for visualizing data collected by Prometheus.
 ```
 
-This format will keep everything in a single, continuous block to avoid unnecessary section breaks, allowing for easier copying and pasting as a single configuration file. Make sure to replace placeholder values like `PROJECT_ID` and `SLACK_WEBHOOK_URL` with actual values as needed. 
-
-After this, simply save and commit the `README.md` file to your GitHub repository.
